@@ -1,10 +1,12 @@
-import numpy as np
 import cv2
+from flask import Flask
 from scipy.spatial import distance
 
 from extract_car import extract_car
-from extract_rectangle import extract_rectangle
 from extract_parking import extract_parking
+from extract_rectangle import extract_rectangle
+
+app = Flask(__name__)
 
 
 def find_parking(show_output):
@@ -98,6 +100,19 @@ def find_parking(show_output):
     if show_output:
         cv2.destroyAllWindows()
 
+@app.route('/')
+def main():
+    """Say hello"""
+    global available_parking
+    print(available_parking)
+    return "Hello World: %s" % str(available_parking)
+
+
+@app.route('/initialize')
+def initialize():
+    global available_parking
+    find_parking(False)
+
 
 if __name__ == '__main__':
-    find_parking(True)
+    app.run(threaded=True)
