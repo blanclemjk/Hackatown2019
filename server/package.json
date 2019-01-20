@@ -1,0 +1,44 @@
+{
+  "name": "server",
+  "description": "Projet Hackatown 2019",
+  "version": "1.1.0",
+  "private": true,
+  "scripts": {
+    "start": "tsc && concurrently --kill-others \"tsc -w\" \"nodemon out/www.js\" ",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "clean": "rimraf out node_modules",
+    "postinstall": "rimraf false"
+  },
+  "dependencies": {
+    "@types/inversify": "^2.0.33",
+    "@types/request-promise-native": "^1.0.15",
+    "@types/socket.io": "^2.1.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "inversify": "^5.0.1",
+    "morgan": "^1.9.1",
+    "reflect-metadata": "^0.1.13",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "1.16.5",
+    "@types/chai": "4.0.4",
+    "@types/cookie-parser": "1.4.1",
+    "@types/cors": "2.8.1",
+    "@types/express": "^4.16.0",
+    "@types/express-serve-static-core": "4.0.50",
+    "@types/mocha": "2.2.42",
+    "@types/morgan": "1.7.32",
+    "@types/node": "^8.0.26",
+    "@types/node-uuid": "0.0.28",
+    "chai": "4.0.0",
+    "concurrently": "^3.0.0",
+    "mocha": "^5.2.0",
+    "rimraf": "^2.5.4",
+    "typescript": "~2.4.2"
+  }
+}
