@@ -12,7 +12,7 @@ export class SocketService {
   }
 
   public hasDest(): boolean {
-    return this.dest === undefined;
+    return this.dest !== undefined;
   }
 
   constructor(private socket: Socket) {
