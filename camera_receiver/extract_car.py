@@ -9,7 +9,8 @@ from extract_rectangle import extract_rectangle
 def extract_car(img, result):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    ret, thresh = cv2.threshold(gray, 50, 255, 1)
+    ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    # ret, thresh = cv2.threshold(gray, 40, 255, 1)
 
     # cv2.imshow('Resultat', thresh)
     # cv2.waitKey(0)
@@ -34,7 +35,7 @@ def extract_car(img, result):
     if len(areas) != 0:
         median = np.median(areas)
     mini = 2000
-    maxi = 11000
+    maxi = 13000
     positions = []
     for index in range(len(contours)):
         if mini > areas[index] or maxi < areas[index]:

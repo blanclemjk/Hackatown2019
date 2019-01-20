@@ -1,10 +1,18 @@
+import json
+
 import numpy as np
 import cv2
 from scipy.spatial import distance
+import time, threading
+import urllib.request
+
 
 from extract_car import extract_car
 from extract_rectangle import extract_rectangle
 from extract_parking import extract_parking
+
+NB_PARKING_SPOTS = 10
+ACCUMULATION = 15
 
 
 def find_parking(show_output):
@@ -18,6 +26,7 @@ def find_parking(show_output):
     while(True):
         ret, frame = cap.read()
         height, width = frame.shape[:2]
+
         frame = frame[0:height, 0:2*(width//3)]
         frame_copy = frame.copy()
         res = extract_parking(frame)
@@ -37,8 +46,8 @@ def find_parking(show_output):
                 accumulator_free.append([pos_free, 1, False, 'f'])
         i = 0
         while i < len(accumulator_free):
-            if accumulator_free[i][1] >= 5:
-                accumulator_free[i][1] = 5
+            if accumulator_free[i][1] >= ACCUMULATION:
+                accumulator_free[i][1] = ACCUMULATION
                 accumulator_free[i][2] = True
             elif accumulator_free[i][1] == 0:
                 accumulator_free.pop(i)
@@ -67,8 +76,8 @@ def find_parking(show_output):
                 accumulator_occupied.append([pos_free, 1, False, 'o'])
         i = 0
         while i < len(accumulator_occupied):
-            if accumulator_occupied[i][1] >= 5:
-                accumulator_occupied[i][1] = 5
+            if accumulator_occupied[i][1] >= ACCUMULATION:
+                accumulator_occupied[i][1] = ACCUMULATION
                 accumulator_occupied[i][2] = True
             elif accumulator_occupied[i][1] == 0:
                 accumulator_occupied.pop(i)
@@ -81,10 +90,10 @@ def find_parking(show_output):
         if show_output:
             cv2.imshow('frame', frame_copy)
 
-        if total_spots == 3:
+        if total_spots == NB_PARKING_SPOTS:
             merged_list = accumulator_free + accumulator_occupied
-            spots = sorted(merged_list, key=lambda acc: acc[0][1])
-            spots = sorted(spots, key=lambda acc: acc[0][0])
+            spots = sorted(merged_list, key=lambda acc: acc[0][0])
+            spots = sorted(spots, key=lambda acc: acc[0][1])
             available_parking = []
             for s in range(len(spots)):
                 if spots[s][-1] == 'f':
@@ -99,5 +108,32 @@ def find_parking(show_output):
         cv2.destroyAllWindows()
 
 
+def send_to_server():
+    global available_parking
+    print(available_parking)
+    try:
+        url = "http://35.203.84.127:3000/"
+        req = urllib.request.Request(url)
+        req.add_header('Content-Type', 'application/json; charset=utf-8')
+        body = {'parkings': available_parking}
+        jsondata = json.dumps(body)
+        jsondataasbytes = jsondata.encode('utf-8')
+        req.add_header('Content-Length', len(jsondataasbytes))
+        response = urllib.request.urlopen(req, jsondataasbytes)
+    except Exception:
+        pass
+    threading.Timer(1.0, send_to_server).start()
+
+
 if __name__ == '__main__':
-    find_parking(True)
+    global available_parking
+    available_parking = []
+    send_to_server()
+    try_again = True
+    while try_again:
+        try:
+            try_again = False
+            find_parking(True)
+        except AttributeError:
+            print("Server not found, trying again ...")
+            try_again = True
