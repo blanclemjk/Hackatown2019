@@ -17,8 +17,8 @@ def extract_rectangle(img, res):
     median = 0
     if len(areas) != 0:
         median = np.median(areas)
-    mini = 8000
-    maxi = 12000
+    mini = 7000
+    maxi = 14000
     positions = []
     for index in range(len(contours)):
         if mini > areas[index] or maxi < areas[index]:
