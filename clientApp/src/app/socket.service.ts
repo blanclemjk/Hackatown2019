@@ -11,6 +11,10 @@ export class SocketService {
     return this.dest;
   }
 
+  public hasDest(): boolean {
+    return this.dest === undefined;
+  }
+
   constructor(private socket: Socket) {
     socket.on('destination', (newDest: number) => {
       if (!this.dest) {

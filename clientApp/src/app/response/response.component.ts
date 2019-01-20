@@ -8,7 +8,6 @@ import { SocketService } from '../socket.service';
 })
 export class ResponseComponent implements OnInit {
 
-
   constructor(private socket: SocketService) { }
 
   ngOnInit() {

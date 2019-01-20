@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 
@@ -13,11 +14,13 @@ import { SocketService } from './socket.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ResponseComponent } from './response/response.component';
+import { AskButtonComponent } from './ask-button/ask-button.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ResponseComponent
+    ResponseComponent,
+    AskButtonComponent
   ],
   imports: [
     BrowserModule,

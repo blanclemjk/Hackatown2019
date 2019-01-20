@@ -1,11 +1,16 @@
-<mat-card>
+<button *ngIf="!requested" (click)="request()" mat-raised-button class="mat-raised-button">Request Parking</button>
+<mat-card *ngIf="requested">
   <mat-card-header>
       <mat-card-title>TEST</mat-card-title>
   </mat-card-header>
   <mat-card-content>
       <div class="content">
-        <mat-spinner></mat-spinner>
-        <app-response></app-response> 
+        <div *ngIf="socket.hasDest() ">
+          <mat-spinner></mat-spinner>
+        </div>
+        <div *ngIf="!socket.hasDest()">
+          <app-response></app-response> 
+        </div>
       </div>
   </mat-card-content>
-</mat-card>>
+</mat-card>
