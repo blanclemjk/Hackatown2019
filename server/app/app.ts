@@ -4,9 +4,9 @@ import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
-//import Types from "./types";
-import { injectable, /*inject*/ } from "inversify";
-//import  { RouterApi } from "./routers/router-api"
+import Types from "./types";
+import { injectable, inject} from "inversify";
+import  { SocketService } from "./socket-service"
 
 @injectable()
 export class Application {
@@ -14,7 +14,7 @@ export class Application {
     private readonly internalError: number = 500;
     public app: express.Application;
 
-    constructor() {
+    constructor( @inject(Types.SocketService) private socketService: SocketService) {
         this.app = express();
 
         this.config();
@@ -35,9 +35,9 @@ export class Application {
 
     public routes(): void {
       
-        this.app.get(
-            "/parking",
-            (req: any, res: any ) => res.send("parking"));
+        this.app.post(
+            "/",
+            (req: any, res: any ) => this.socketService.updateParkings(req, res));
 
         
 
