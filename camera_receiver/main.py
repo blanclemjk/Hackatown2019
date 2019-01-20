@@ -12,7 +12,8 @@ from extract_rectangle import extract_rectangle
 from extract_parking import extract_parking
 
 NB_PARKING_SPOTS = 10
-ACCUMULATION = 15
+ACCUMULATION = 10
+MAX_DIST = 30
 
 
 def find_parking(show_output):
@@ -38,7 +39,7 @@ def find_parking(show_output):
             pos_found = False
             for acc_free in accumulator_free:
                 dist = distance.euclidean(pos_free, acc_free[0])
-                if dist < 10:
+                if dist < MAX_DIST:
                     acc_free[1] += 2
                     pos_found = True
                     break
@@ -62,18 +63,24 @@ def find_parking(show_output):
 
         #######
 
-        for acc_free in accumulator_occupied:
-            acc_free[1] -= 1
-        for pos_free in positions_occupied:
+        for acc_occ in accumulator_occupied:
+            acc_occ[1] -= 1
+        for pos_occ in positions_occupied:
+            skip = False
+            for acc_free in accumulator_free:
+                if distance.euclidean(pos_occ, acc_free[0]) < MAX_DIST:
+                    skip = True
             pos_found = False
-            for acc_free in accumulator_occupied:
-                dist = distance.euclidean(pos_free, acc_free[0])
-                if dist < 10:
-                    acc_free[1] += 2
+            for acc_occ in accumulator_occupied:
+                dist = distance.euclidean(pos_occ, acc_occ[0])
+                if dist < MAX_DIST:
+                    if skip:
+                        acc_occ[1] = 0
+                    acc_occ[1] += 2
                     pos_found = True
                     break
             if not pos_found:
-                accumulator_occupied.append([pos_free, 1, False, 'o'])
+                accumulator_occupied.append([pos_occ, 1, False, 'o'])
         i = 0
         while i < len(accumulator_occupied):
             if accumulator_occupied[i][1] >= ACCUMULATION:
