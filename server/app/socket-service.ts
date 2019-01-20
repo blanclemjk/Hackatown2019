@@ -70,7 +70,7 @@ export class SocketService {
     }
 
     private updateAllParking(): void {
-        console.log(this.space)
+        //console.log(this.space)
         if(this.space.size > 0) {
             this.space.forEach((value: number, key: SocketIO.Socket) => {
             this.updateParking(key).then().catch();
