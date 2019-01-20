@@ -11,6 +11,8 @@ cap = cv2.VideoCapture("http://10.200.21.209:8080/video/mjpeg")
 accumulator_free = []
 accumulator_occupied = []
 
+available_parking = []
+
 while(True):
     ret, frame = cap.read()
     height, width = frame.shape[:2]
@@ -30,7 +32,7 @@ while(True):
                 pos_found = True
                 break
         if not pos_found:
-            accumulator_free.append([pos_free, 1, False])
+            accumulator_free.append([pos_free, 1, False, 'f'])
     i = 0
     while i < len(accumulator_free):
         if accumulator_free[i][1] >= 5:
@@ -40,9 +42,11 @@ while(True):
             accumulator_free.pop(i)
             continue
         i += 1
+    total_spots = 0
     for acc_free in accumulator_free:
         if acc_free[2]:
             cv2.circle(frame_copy, acc_free[0], 30, (0, 200, 0), -1)
+            total_spots += 1
 
 
     #######
@@ -58,7 +62,7 @@ while(True):
                 pos_found = True
                 break
         if not pos_found:
-            accumulator_occupied.append([pos_free, 1, False])
+            accumulator_occupied.append([pos_free, 1, False, 'o'])
     i = 0
     while i < len(accumulator_occupied):
         if accumulator_occupied[i][1] >= 5:
@@ -71,8 +75,19 @@ while(True):
     for acc_free in accumulator_occupied:
         if acc_free[2]:
             cv2.circle(frame_copy, acc_free[0], 30, (0, 0, 200), -1)
+            total_spots += 1
 
     cv2.imshow('frame', frame_copy)
+
+    if total_spots == 3:
+        merged_list = accumulator_free + accumulator_occupied
+        spots = sorted(merged_list, key=lambda acc: acc[0][1])
+        spots = sorted(spots, key=lambda acc: acc[0][0])
+        available_parking = []
+        for s in range(len(spots)):
+            if spots[s][-1] == 'f':
+                available_parking.append(s)
+        print(available_parking)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
