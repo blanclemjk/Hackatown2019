@@ -1,1 +1,0 @@
-{"version":3,"file":"socket-service.js","sourceRoot":"app/","sources":["socket-service.ts"],"names":[],"mappings":";;;;;;;;AAAA,yCAAwC;AAExC,gCAAgC;AAChC,yDAAyD;AACzD,kEAAkE;AAClE,oDAAoD;AAGpD,IAAa,kBAAkB,GAA/B,MAAa,kBAAkB;IAGpB,YAAY,CAAC,MAAmB;QACnC,IAAI,CAAC,YAAY,GAAG,EAAE,CAAC,MAAM,CAAC,CAAC;IACnC,CAAC;CAEJ,CAAA;AAPY,kBAAkB;IAD9B,sBAAU,EAAE;GACA,kBAAkB,CAO9B;AAPY,gDAAkB"}
