@@ -68,7 +68,7 @@ def find_parking(show_output):
         for pos_occ in positions_occupied:
             skip = False
             for acc_free in accumulator_free:
-                if distance.euclidean(pos_occ, acc_free[0]) < MAX_DIST:
+                if distance.euclidean(pos_occ, acc_free[0]) < MAX_DIST * 1.5:
                     skip = True
             pos_found = False
             for acc_occ in accumulator_occupied:
@@ -76,7 +76,8 @@ def find_parking(show_output):
                 if dist < MAX_DIST:
                     if skip:
                         acc_occ[1] = 0
-                    acc_occ[1] += 2
+                    else:
+                        acc_occ[1] += 2
                     pos_found = True
                     break
             if not pos_found:
@@ -97,14 +98,25 @@ def find_parking(show_output):
         if show_output:
             cv2.imshow('frame', frame_copy)
 
-        if total_spots == NB_PARKING_SPOTS:
-            merged_list = accumulator_free + accumulator_occupied
-            spots = sorted(merged_list, key=lambda acc: acc[0][0])
-            spots = sorted(spots, key=lambda acc: acc[0][1])
-            available_parking = []
-            for s in range(len(spots)):
-                if spots[s][-1] == 'f':
-                    available_parking.append(s)
+        # if total_spots == NB_PARKING_SPOTS:
+        merged_list = accumulator_free + accumulator_occupied
+        spots = sorted(merged_list, key=lambda acc: acc[0][0])
+        list_up = []
+        list_down = []
+        for item in spots:
+            if item[0][1] < height / 2:
+                list_up.append(item)
+            else:
+                list_down.append(item)
+        # spots = sorted(spots, key=lambda acc: acc[0][1])
+        available_parking = []
+        for s in range(len(list_up)):
+            if list_up[s][-1] == 'f':
+                available_parking.append(s)
+
+        for s in range(len(list_down)):
+            if list_down[s][-1] == 'f':
+                available_parking.append(s + 5)
             # print(available_parking)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
