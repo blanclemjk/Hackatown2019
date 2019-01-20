@@ -22,6 +22,6 @@ export class SocketService {
       }
       this.dest = newDest;
     });
-    socket.emit('connection');
+    setTimeout(_ => {socket.emit('connection'); }, 1000);
   }
 }

@@ -11,6 +11,5 @@ const container: Container = new Container();
 
 container.bind(Types.Server).to(Server);
 container.bind(Types.Application).to(Application);
-container.bind(Types.SocketService).to(SocketService);
-
+container.bind(Types.SocketService).to(SocketService).inSingletonScope();
 export { container };

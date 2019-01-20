@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: 'http://35.203.84.127:3000', options: {} };
 
 import { SocketService } from './socket.service';
 
