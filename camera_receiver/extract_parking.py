@@ -19,16 +19,9 @@ def extract_parking(img):
     # res = cv2.erode(thresh,kernel,iterations = 1)
     # kernel = np.ones((11, 11), np.uint8)
     res = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_DILATE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_ERODE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_ERODE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_ERODE, kernel)
-    res = cv2.morphologyEx(res, cv2.MORPH_ERODE, kernel)
+    kernel = np.ones((9, 9), np.uint8)
+    res = cv2.dilate(res, kernel, iterations=3)
+    # res = cv2.erode(res, kernel, iterations=1)
 
 
     # cv2.imshow('Resultat', res)
@@ -48,8 +41,11 @@ def extract_parking(img):
     for cnt in contours:
         if cv2.contourArea(cnt) < 1000:
             continue
-        x, y, w, h = cv2.boundingRect(cnt)
-        cv2.rectangle(res, (x, y), (x + w, y + h), (255,255,255), 20)
+        rect = cv2.minAreaRect(cnt)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
+        cv2.drawContours(res, [box], 0, (255, 255, 255), 20)
+        # cv2.rectangle(res, (x, y), (x + w, y + h), (255,255,255), 20)
 
         # cv2.drawContours(img, [cnt], 0, (randint(0,255), randint(0,255), randint(0,255)), -1)
 
