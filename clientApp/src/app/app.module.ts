@@ -29,6 +29,7 @@ import { AskButtonComponent } from './ask-button/ask-button.component';
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    MatButtonModule,
     SocketIoModule.forRoot(config)
   ],
   providers: [SocketService],
