@@ -2,3 +2,5 @@
 camera_receiver/\.idea/
 
 camera_receiver/venv/
+
+server/out/
