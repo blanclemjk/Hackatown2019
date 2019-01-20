@@ -11,7 +11,10 @@ export class SocketService {
     
 
     public createServer(server: http.Server): void {
+        console.log("ALLO");
         this.space = new Map<SocketIO.Socket, number>();
+        console.log(this.space);
+        setInterval(() => {this.updateAllParking();}, 3000);
         this.socketServer = Io(server);
         this.socketServer.on("connection", (socket: SocketIO.Socket) => {
             this.space.set(socket, -1);
@@ -33,26 +36,48 @@ export class SocketService {
         socket.on("parking", () => {
             this.requestParking().then((parkings: number[]) => {
                 if(parkings.length > 0) {
-                this.space.forEach((value: number, key: SocketIO.Socket) => {
-                    let stillFree: Boolean = false; 
-                        for(let freeSpace of parkings) {
-                            if(value === freeSpace) {
-                                stillFree = true;
-                                break;
-                            }
-                        }
-                        if(!stillFree) {
-                            this.space.set(socket, parkings[0]);
-                            socket.emit("destination", parkings[0]);
-                        }
-                });
+                    this.space.set(socket, parkings[0]);
+                    socket.emit("destination", parkings[0]);
                 } else {
                     socket.emit("destination", -1);
-                }
-            }   
+                }   
+            }
             ).catch();
-            
         });
+    }
+
+    private async updateParking(socket: SocketIO.Socket): Promise<void> {
+        this.requestParking().then((parkings: number[]) => {
+            if(parkings.length > 0) {
+            this.space.forEach((value: number, key: SocketIO.Socket) => {
+                let stillFree: Boolean = false; 
+                    for(let freeSpace of parkings) {
+                        if(value === freeSpace) {
+                            stillFree = true;
+                            break;
+                        }
+                    }
+                    if(!stillFree) {
+                        this.space.set(socket, parkings[0]);
+                        socket.emit("destination", parkings[0]);
+                    }
+            });
+            } else {
+                socket.emit("destination", -1);
+            }
+        }   
+        ).catch();
+    }
+
+    private updateAllParking(): void {
+        console.log(this.space)
+        if(this.space.size > 0) {
+            this.space.forEach((value: number, key: SocketIO.Socket) => {
+            this.updateParking(key).then().catch();
+        });
+        }
+        
+        console.log("CRON JOB\n");
     }
 
     private async requestParking(): Promise<number[]> {
